@@ -3,16 +3,55 @@
 {% block content %}
     <div style="margin: 10px;">
       <h1>feed page</h1>
-      <a href="/feeds/new"
-         style="background-color: #ffb03b; border-radius: 10px; width: auto; height: auto; padding: 5px; color: #ffffff;">
-         new feed</a><br>
+      {% if user.is_authenticated %}
+        <a href="/feeds/new"
+          style="background-color: #ffb03b; border-radius: 10px; width: auto; height: auto; padding: 5px; color: #ffffff;">
+          new feed</a><br>
+      {% endif %}
     </div>
     {% for feed in feeds %} 
-      <div style="border: 2px dashed #ffb03b; margin: 10px; padding: 5px; width: 500px; display: inline-block">
+      <div style="border: 2px dashed #ffb03b; border-radius: 10px; margin: 10px; padding: 10px; width: 500px;">
+        <a href="/feeds/{{ feed.id }}/like">{{ feed.liked_users.count }} Likes</a>
         <a href="/feeds/{{ feed.id }}">더보기</a>
-        <a href="/feeds/{{ feed.id }}/delete" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+        <a href="/feeds/{{feed.id}}/edit">edit</a>
+        {% if request.user == feed.author %}
+          <a href="/feeds/{{ feed.id }}/delete" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+        {% endif %}
         <p>{{ feed.title }}</p>
         <p>{{ feed.content }}</p>
+        <p>작성자:<strong>{{ feed.author.username }}</strong>
+          (following: {{ feed.author.profile.follow_to.all.count }} / follower: {{ feed.author.profile.follow_from.all.count }})
+          {% if user.is_authenticated %}
+            {% if request.user != feed.author %}
+              <a href="/{{ feed.author.id }}/follow">
+                {% if request.user.profile in feed.author.profile.follows.all %}
+                  팔로우 취소
+                {% else %}
+                  팔로우
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endif %}
+        <hr />
+        {% for c in feed.feedcomment_set.all %}
+          <div style="display: flex; flex-direction: row; align-items: center;">
+            <p>{{ c.content }}</p>
+            {% if request.user == c.author %}
+              <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST" >
+                {% csrf_token %}
+                <button>댓글 삭제</button>
+              </form>
+            {% endif %}
+          </div>
+           
+        {% endfor %}
+        {% if user.is_authenticated %}   
+          <form action="/feeds/{{ feed.id }}/comments/" method="POST">
+            {% csrf_token %}
+            <input type="text" name="content" />
+            <button type="submit">댓글 달기</button>
+          </form>
+        {% endif %}
       </div>
     {% endfor %} <!-- for를 end시킨다는 뜻! 여기서는 들여쓰기로 끝을 못 내니 -->
 {% endblock content %}

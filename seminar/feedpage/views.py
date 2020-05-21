@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Feed 
+from .models import Feed, FeedComment, Like
+from django.contrib.auth.models import User
 from django.shortcuts import redirect 
 
 def index(request):
@@ -9,7 +10,7 @@ def index(request):
     elif request.method == 'POST': # create(form을 이용하여 submit한 형태) 
         title = request.POST['title']
         content = request.POST['content']
-        Feed.objects.create(title=title, content=content)
+        Feed.objects.create(title=title, content=content, author=request.user)
         return redirect('/feeds') 
 
 def new(request):
@@ -35,3 +36,22 @@ def edit(request, id):
         feed.save()
         feed.update_date()
         return redirect('/feeds/'+str(id)) 
+
+def create_comment(request, id):
+    content = request.POST['content']
+    FeedComment.objects.create(feed_id=id, content=content, author=request.user)
+    return redirect('/feeds')
+
+def delete_comment(request, id, cid):
+    c = FeedComment.objects.get(id=cid)
+    c.delete()
+    return redirect('/feeds')
+
+def feed_like(request, pk):
+    feed = Feed.objects.get(id=pk)
+    like_list = feed.like_set.filter(user_id=request.user.id)
+    if like_list.count() > 0:
+        feed.like_set.get(user_id=request.user.id).delete()
+    else:
+        Like.objects.create(user_id=request.user.id, feed_id=feed.id)
+    return redirect('/feeds')
