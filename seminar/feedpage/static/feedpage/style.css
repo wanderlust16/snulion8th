@@ -1,0 +1,33 @@
+header {
+    background-color: #ffb03b;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.fade-in {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.feed-container {
+    border-radius: 10px;
+    border: 2px dashed #ffb03b;
+    margin: 10px; padding: 10px; width: 500px;
+}
+
