@@ -37,3 +37,17 @@ def follow_manager(request, pk):
 
     return redirect('/feeds')
 
+def mypage(request, uid):
+    profile = Profile.objects.get(user_id=uid)
+    return render(request, 'accounts/mypage.html', {'profile': profile})
+
+def edit_profile(request, uid):
+    if request.method == 'GET':
+        profile = Profile.objects.get(user_id=uid)
+        return render(request, 'accounts/edit_profile.html', {'profile': profile})
+    elif request.method == 'POST':
+        profile = Profile.objects.get(user_id=uid)
+        profile.college = request.POST['college']
+        profile.major = request.POST['major']
+        profile.save()
+        return redirect('/accounts/'+str(uid))

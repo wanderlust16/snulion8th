@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>snulion</title>
       {% load static %} 
-      <link rel="stylesheet" type="text/css" href="{% static 'feedpage/style.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
       {% comment %} <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet"> {% endcomment %}
   </head>
   <header style="font-family: 'Noto Serif KR', serif;">
@@ -14,9 +14,9 @@
                 학교: {{ user.profile.college }}<br>
                 전공: {{ user.profile.major }}<br>
                 내가 좋아한 글 : {{ user.feeds_liked.count }}개<br />  
-            <a href="{% url 'mypage' user.id %}" class="top-nav">My Page</a>
-            <span class="bar">|</span>
-            <a href="{% url 'logout'%}?next={{request.path}}" class="top-nav">로그아웃</a>
+            <a href="{% url 'mypage' user.id %}">My Page</a>
+            <span>|</span>
+            <a href="{% url 'feedpage:logout'%}?next={{request.path}}">로그아웃</a>
         {% else %}  
             <a href="{% url 'signup' %}">회원가입</a>
             <a href="{% url 'login'%}?next={{request.path}}">로그인</a>

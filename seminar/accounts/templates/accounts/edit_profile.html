@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Edit Profile</h1>
+    <form action="/accounts/{{ user.id }}/edit/" method="POST">
+      {% csrf_token %}
+      <p>name</p>
+      <input name="name" value={{ profile.user }} /> <br />
+      <p>college</p>
+      <input name="college" value={{ profile.college }} /> <br />
+      <p>major</p>
+      <input name="major" value={{ profile.major }} /> <br />
+      <input type="submit" value="수정하기" />
+    </form>
+{% endblock content %}

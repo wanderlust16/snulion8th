@@ -13,6 +13,8 @@ urlpatterns = [
     # path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', accounts.views.signup, name='signup'),
+    path('accounts/<int:uid>/', accounts.views.mypage, name="mypage"),
+    path('accounts/<int:uid>/edit/', accounts.views.edit_profile, name="edit_profile"),
     path('<int:pk>/follow/', accounts.views.follow_manager, name='follow'),    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
  

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Page</h1>
+
+<p>이름: {{ profile.user }}</p>
+<p>학교: {{ profile.college }}</p>
+<p>전공: {{ profile.major }}</p>
+<p>팔로워 수: {{ profile.follows.all.count }}</p>
+
+<a href="{% url "edit_profile" user.id %}">정보 수정하기</a>
+<a href='/'>돌아가기</a>
+
+{% endblock content %}
