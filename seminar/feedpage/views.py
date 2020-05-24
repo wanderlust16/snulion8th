@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Feed, FeedComment, Like
+from .models import Feed, FeedComment, Like, CommentLike
 from django.contrib.auth.models import User
 from django.shortcuts import redirect 
 
@@ -54,4 +54,15 @@ def feed_like(request, pk):
         feed.like_set.get(user_id=request.user.id).delete()
     else:
         Like.objects.create(user_id=request.user.id, feed_id=feed.id)
+    return redirect('/feeds')
+
+def comment_like(request, id, cid):
+    feed = Feed.objects.get(id=id) # in fact, no use
+    comment = FeedComment.objects.get(id=cid)
+    # get을 쓰면 No match 에러가 발생하는 이유: 좋아요가 없을 수도 있으니까! 
+    commentlike_list = comment.commentlike_set.filter(user_id=request.user.id) 
+    if commentlike_list.count() > 0:
+        comment.commentlike_set.get(user_id=request.user.id).delete()
+    else:
+        CommentLike.objects.create(user_id=request.user.id, comment_id=comment.id)
     return redirect('/feeds')

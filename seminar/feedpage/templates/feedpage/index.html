@@ -35,14 +35,16 @@
           {% endif %}
         <hr />
         {% for c in feed.feedcomment_set.all %}
-          <div>
-            <p>{{ c.content }}</p>
-            {% if request.user == c.author %}
-              <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST" >
-                {% csrf_token %}
-                <button>댓글 삭제</button>
-              </form>
-            {% endif %}
+          <div style="display: flex; flex-direction: row;">
+            <div>{{ c.content }}</div>
+            <a href="{% url "comment_like" id=feed.id cid=c.id %}">{{ c.liked_users.count }} Likes</a>
+
+              {% if request.user == c.author %}
+                <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST">
+                  {% csrf_token %}
+                  <button>댓글 삭제</button>  
+                </form>
+              {% endif %}
           </div>
            
         {% endfor %}
