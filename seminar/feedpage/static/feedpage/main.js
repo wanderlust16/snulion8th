@@ -26,10 +26,10 @@ $(".feed-like").click(() => {
 $('.comment-submit').submit((e) => {
     event.preventDefault();
     console.log('form submitted');
-    // this가 안 먹힘 ㅠㅠ
-    const $this = $(this);
-    const fid = $('.comment-submit').data('fid');
-    const csrfmiddlewaretoken = $('.comment-submit').data('csrfmiddlewaretoken');
+    // $this가 안 먹힘 -> arrow function이라서! 
+    const $this = $(e.currentTarget);
+    const fid = $this.data('fid');
+    const csrfmiddlewaretoken = $this.data('csrfmiddlewaretoken');
 
     $.ajax({
         type: 'POST',
@@ -45,13 +45,14 @@ $('.comment-submit').submit((e) => {
             const str = `
                 <div style="display: flex; flex-direction: row;" class="comment-box">
                     <div>${data.content}</div>
-                    <a href="{% url "comment_like" id=${fid} cid=${data.id} %}" class="comment-like" data-cid={{ ${fid} }}>0 Likes</a>
-                        <form action="/feeds/{{ ${fid} }}/comments/{{ ${data.id} }}/" method="POST">
+                    <a href="{% url "comment_like" id=${fid} cid=${data.id} %}" class="comment-like" data-cid=${fid}>0 Likes</a>
+                        <form action="/feeds/${fid}/comments/${data.id}/" method="POST">
                         <button>댓글 삭제</button>  
                         </form>
                 </div>
             `
-            const class_container = $('.comment-container')
+            // const class_container = $('.comment-container') // 모든 피드에 댓글을 달아버림
+            const class_container = $this.siblings('.comment-container')
             class_container.append(str);
             $("input[name=content]").val('') // clear current input
         },
