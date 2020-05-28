@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import Feed, FeedComment, Like, FeedComment, CommentLike
 from django.contrib.auth.models import User
 from django.shortcuts import redirect 
+from django.http import JsonResponse, HttpResponse
+import json
 
 def index(request):
     if request.method == 'GET': # index
@@ -39,8 +41,18 @@ def edit(request, id):
 
 def create_comment(request, id):
     content = request.POST['content']
-    FeedComment.objects.create(feed_id=id, content=content, author=request.user)
-    return redirect('/feeds')
+    new_comment = FeedComment.objects.create(feed_id=id, content=content, author=request.user)
+
+    context = {
+        'id': new_comment.id,
+        'username': new_comment.author.username,
+        'content': new_comment.content,
+        # 'liked_users': new_comment.liked_users.count
+    }
+
+    return JsonResponse(context)
+    # return HttpResponse(json.dumps(context), content_type="application/json")
+    # return redirect('/feeds')
 
 def delete_comment(request, id, cid):
     c = FeedComment.objects.get(id=cid)

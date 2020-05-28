@@ -6,6 +6,7 @@
       {% load static %} 
       <link rel="stylesheet" type="text/css" href="{% static 'feedpage/style.css' %}">
       {% comment %} <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet"> {% endcomment %}
+      <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
   <header style="font-family: 'Noto Serif KR', serif;">
       <div style="text-align: right; color: #6b561f; margin: 15px;">
@@ -26,5 +27,7 @@
   <body style="font-family: 'Noto Serif KR', serif;">
   {% block content %}
   {% endblock %}
+  <script src="{% static 'feedpage/main.js' %}"></script>
+
   </body>
 </html>

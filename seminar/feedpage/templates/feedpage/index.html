@@ -12,7 +12,8 @@
     <div class="feed-container">
     {% for feed in feeds %} 
       <div class="feed">
-        <a href="/feeds/{{ feed.id }}/like">{{ feed.liked_users.count }} Likes</a>
+      {% comment %} here add tmp js code {% endcomment %}
+        <a href="/feeds/{{ feed.id }}/like" class="feed-like" data-fid={{ feed.id }}>{{ feed.liked_users.count }} Likes</a>
         <a href="/feeds/{{ feed.id }}">더보기</a>
         <a href="/feeds/{{feed.id}}/edit">edit</a>
         {% if request.user == feed.author %}
@@ -34,23 +35,26 @@
             {% endif %}
           {% endif %}
         <hr />
-        {% for c in feed.feedcomment_set.all|dictsortreversed:"liked_users.count" %}
-          <div style="display: flex; flex-direction: row;">
-            <div>{{ c.content }}</div>
-            <a href="{% url "comment_like" id=feed.id cid=c.id %}">{{ c.liked_users.count }} Likes</a>
-              {% if request.user == c.author %}
-                <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST">
-                  {% csrf_token %}
-                  <button>댓글 삭제</button>  
-                </form>
-              {% endif %}
-          </div>
-           
-        {% endfor %}
+        <div class="comment-container">
+          {% for c in feed.feedcomment_set.all|dictsortreversed:"liked_users.count" %}
+            <div style="display: flex; flex-direction: row;" class="comment-box">
+              <div>{{ c.content }}</div>
+              <a href="{% url "comment_like" id=feed.id cid=c.id %}" class="comment-like" data-cid={{ c.id }}>{{ c.liked_users.count }} Likes</a>
+                {% if request.user == c.author %}
+                  <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST">
+                    {% csrf_token %}
+                    <button>댓글 삭제</button>  
+                  </form>
+                {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
         {% if user.is_authenticated %}   
-          <form action="/feeds/{{ feed.id }}/comments/" method="POST">
+          <form action="/feeds/{{ feed.id }}/comments/" method="POST" class="comment-submit" data-fid="{{ feed.id }}" data-csrfmiddlewaretoken="{{ csrf_token }}">
             {% csrf_token %}
             <input type="text" name="content" />
+            {% comment %} <button type="submit">댓글 달기</button> {% endcomment %}
             <button type="submit">댓글 달기</button>
           </form>
         {% endif %}
