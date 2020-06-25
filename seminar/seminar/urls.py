@@ -17,4 +17,5 @@ urlpatterns = [
     path('accounts/<int:uid>/edit/', accounts.views.edit_profile, name="edit_profile"),
     path('<int:pk>/follow/', accounts.views.follow_manager, name='follow'),    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
- 
+
+urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

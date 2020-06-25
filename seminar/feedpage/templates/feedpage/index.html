@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% load static %} 
+
     <div class="title-new">
       <h1>feed page</h1>
       {% if user.is_authenticated %}
@@ -10,10 +12,11 @@
       {% endif %}
     </div>
     <div class="feed-container">
+    <img src="{% static "images/racoon-cheats.jpg" %}" />
+
     {% for feed in feeds %} 
       <div class="feed">
-      {% comment %} here add tmp js code {% endcomment %}
-        <a href="/feeds/{{ feed.id }}/like" class="feed-like" data-fid={{ feed.id }}>{{ feed.liked_users.count }} Likes</a>
+        <a href="/feeds/{{ feed.id }}/like" class="feed-like" data-fid={{ feed.id }} data-csrfmiddlewaretoken="{{ csrf_token }}" >{{ feed.liked_users.count }} Likes</a>
         <a href="/feeds/{{ feed.id }}">더보기</a>
         <a href="/feeds/{{feed.id}}/edit">edit</a>
         {% if request.user == feed.author %}
@@ -37,23 +40,26 @@
         <hr />
         <div class="comment-container">
           {% for c in feed.feedcomment_set.all|dictsortreversed:"liked_users.count" %}
-            <div style="display: flex; flex-direction: row;" class="comment-box">
-              <div>{{ c.content }}</div>
-              <a href="{% url "comment_like" id=feed.id cid=c.id %}" class="comment-like" data-cid={{ c.id }}>{{ c.liked_users.count }} Likes</a>
-                {% if request.user == c.author %}
-                  <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST">
-                    {% csrf_token %}
-                    <button>댓글 삭제</button>  
-                  </form>
-                {% endif %}
-            </div>
+            {% comment %} 여기 style 추가 {% endcomment %}
+              <div style="display: flex; flex-direction: row;" class="comment-box">
+                <div>{{ c.content }}</div>
+                <a href="{% url "comment_like" id=feed.id cid=c.id %}" class="comment-like" data-cid={{ c.id }}>{{ c.liked_users.count }} Likes</a>
+                  {% if request.user == c.author %}
+                    <form action="/feeds/{{ feed.id }}/comments/{{ c.id }}/" method="POST" class="comment-delete" >
+                      {% csrf_token %}
+                      <button>댓글 삭제</button>  
+                    </form>
+                  {% endif %}
+              </div>
           {% endfor %}
         </div>
+
 
         {% if user.is_authenticated %}   
           <form action="/feeds/{{ feed.id }}/comments/" method="POST" class="comment-submit" data-fid="{{ feed.id }}" data-csrfmiddlewaretoken="{{ csrf_token }}">
             {% csrf_token %}
-            <input type="text" name="content" />
+            {% comment %} add input class {% endcomment %}
+            <input type="text" name="content" class="{{ feed.id }}" />
             {% comment %} <button type="submit">댓글 달기</button> {% endcomment %}
             <button type="submit">댓글 달기</button>
           </form>

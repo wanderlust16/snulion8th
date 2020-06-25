@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <title>snulion</title>
       {% load static %} 
+      {% load sass_tags %}
       <link rel="stylesheet" type="text/css" href="{% static 'feedpage/style.css' %}">
-      {% comment %} <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet"> {% endcomment %}
+      <link href="{% sass_src 'feedpage/main.scss' %}" rel="stylesheet" type="text/css" />
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet">
       <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
   </head>
-  <header style="font-family: 'Noto Serif KR', serif;">
-      <div style="text-align: right; color: #6b561f; margin: 15px;">
+  {% comment %} class="fold" 추가 {% endcomment %}
+  <header style="font-family: 'Noto Serif KR', serif;" class="fold">
+      <div style="text-align: right; color: #6b561f; margin: 15px;" class="fold-inner">
         {% if user.is_authenticated %}
             {{ user.get_username }}님, 안녕하세요<br>
                 학교: {{ user.profile.college }}<br>
@@ -23,11 +26,12 @@
             <a href="{% url 'login'%}?next={{request.path}}">로그인</a>
         {% endif %} 
       </div>
-  </header>
+  </header>  
   <body style="font-family: 'Noto Serif KR', serif;">
   {% block content %}
   {% endblock %}
+  {% comment %} 버튼 추가 {% endcomment %}
+  <button class="scroll-up">UP</button>
   <script src="{% static 'feedpage/main.js' %}"></script>
-
   </body>
 </html>

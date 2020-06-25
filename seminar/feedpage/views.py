@@ -41,6 +41,7 @@ def edit(request, id):
 
 def create_comment(request, id):
     content = request.POST['content']
+    # FeedComment.objects.create(feed_id=id, content=content, author=request.user)
     new_comment = FeedComment.objects.create(feed_id=id, content=content, author=request.user)
 
     context = {
@@ -66,7 +67,14 @@ def feed_like(request, pk):
         feed.like_set.get(user_id=request.user.id).delete()
     else:
         Like.objects.create(user_id=request.user.id, feed_id=feed.id)
-    return redirect('/feeds')
+
+    context = {
+        'fid': feed.id
+    }
+    
+    return JsonResponse(context)
+
+    # return redirect('/feeds')
 
 def comment_like(request, id, cid):
     feed = Feed.objects.get(id=id) # in fact, no use

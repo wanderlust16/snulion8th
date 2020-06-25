@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap');
+
+* {
+    font-family: 'Noto Serif KR', serif;
+}
+
+$myorange: rgb(255, 177, 59);
+
+header {
+    // background-color: #ffb03b;
+    background-color: $myorange;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+body {
+    div {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    }     
+}
+
+
+@-webkit-keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.title-new, .feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.feed {
+    border-radius: 10px;
+    border: 2px dashed $myorange;
+    margin: 10px; padding: 10px; width: 500px;
+}
+
+a > .top-nav, span > .bar {
+    color: #fff3d6;
+    text-decoration: none;
+}
+

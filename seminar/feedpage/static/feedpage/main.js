@@ -1,31 +1,62 @@
+// 추가
+$(document).ready(() => {
+    $('.fold').click((e) => {
+        const $this = $('.fold');
+        // e.stopPropagation();
+        if($(e.currentTarget).css('height') > '10px') { // e.currentTarget도 먹힘
+            $this.css({
+                'height': '10px',
+                'cursor': 'pointer',
+            });
+            $this.children().css('display', 'none');
+        } else {
+            $this.css({
+                'height': 'auto',
+                'cursor': 'default',
+            })
+            $this.children().css('display', 'block');
+        }
+    })
+    $('.fold-inner').click((e) => {
+        e.stopPropagation();
+    })
+})
 
-$(".feed-like").click(() => {
-    alert("clicked feed like");
-    const fid = $this.data
-
-    // feed_like(fid);
+$(".feed-like").click((e) => {
+    e.preventDefault();
+    const $this = $(e.currentTarget);
+    const fid = $this.data('fid');
+    const csrfmiddlewaretoken = $this.data('csrfmiddlewaretoken');
+    console.log(fid);
     $.ajax({
-        url: `/${fid}/like/`,
+        url: `/feeds/${fid}/like/`,
         type: "POST",
-        data: $this.data("fid"),
+        data: {
+            fid: fid,
+            csrfmiddlewaretoken: csrfmiddlewaretoken,
+        },
         dataType: "json",
         success: function(data) {
-            console.log(data);
+            // console.log(data);
+            // 현재 페이지로 돌아가는 코드
+            window.location.reload();
+            
         },
         error: function(response, status, error) {
-            alert("error");
+            // alert("error");
             console.log(response, status, error);
         },
-        complete: function() {
-            alert('complete');
-            console.log(response);s
+        complete: function(response) {
+            // alert('complete');
+            // console.log(response);
         }
     })
 });
 
+// 완료
 $('.comment-submit').submit((e) => {
-    event.preventDefault();
-    console.log('form submitted');
+    e.preventDefault();
+    // console.log('form submitted');
     // $this가 안 먹힘 -> arrow function이라서! 
     const $this = $(e.currentTarget);
     const fid = $this.data('fid');
@@ -37,10 +68,10 @@ $('.comment-submit').submit((e) => {
         data: { // 사용되는 곳이 없는지? 
             fid: fid,
             csrfmiddlewaretoken: csrfmiddlewaretoken,
-            content: $("input[name=content]").val(),
+            content: $(`input.${fid}[name=content]`).val(),
         },
         dataType: 'json',
-        success: function(data) { // 여기 data는 views.py의 data
+        success: function(data) { // 여기 data는 views.py의 data(?)
             console.log(data);
             const str = `
                 <div style="display: flex; flex-direction: row;" class="comment-box">
@@ -52,8 +83,8 @@ $('.comment-submit').submit((e) => {
                 </div>
             `
             // const class_container = $('.comment-container') // 모든 피드에 댓글을 달아버림
-            const class_container = $this.siblings('.comment-container')
-            class_container.append(str);
+            const comment_container = $this.siblings('.comment-container')
+            comment_container.append(str);
             $("input[name=content]").val('') // clear current input
         },
         error: function(response, status, error) {
@@ -61,36 +92,24 @@ $('.comment-submit').submit((e) => {
             console.log(response, status, error);
             // window.location.replace("{% url 'feedpage:index' %}")
         },
-        // complete: function(response) {
-        //     alert('complete');
-        //     console.log(response);
-        // },
+        complete: function(response) {
+            // alert('complete');
+            console.log(response);
+        },
     });
-    });
+});
 
+// 숙제?
 $(".comment-like").click(() => {
-    alert("clicked comment like");
+    // alert("clicked comment like");
 })
 
-// function feed_like(fid) {
-//     console.log("clicked feed-like");
-//     $.ajax({
-//         url : `/${fid}/like/`,
-//         type : "POST", // http method
-//         data : { the_post : $('#post-text').val() }, // data sent with the post request
+// 숙제?
+$(".comment-delete").click(() => {
+    // alert("clicked comment delete");
+})
 
-//         // handle a successful response
-//         success : function(json) {
-//             $('#post-text').val(''); // remove the value from the input
-//             console.log(json); // log the returned json to the console
-//             console.log("success"); // another sanity check
-//         },
-
-//         // handle a non-successful response
-//         error : function(xhr,errmsg,err) {
-//             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-//                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-//             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-//         }
-//     })
-// }
+// 추가
+$(".scroll-up").click((e) => {
+    $(window).scrollTop(0);
+})
